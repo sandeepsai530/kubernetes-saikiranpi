@@ -1,0 +1,34 @@
+DNS Name
+S3 Bucket
+Create an EC2 with t2.medium
+IAM role and assign it to EC2 instance with EC2 full access
+Connect to EC2 and generate SSH role
+download kops and kubectl under usr/local/bin and change permissions
+
+# download kubectl and give permissions
+# edit .bashrc and add all the env variables
+
+export NAME=saisandeep-devops.xyz
+export KOPS_STATE_STORE=s3://saisandeep-devops.xyz
+export AWS_REGION=us-east-1
+export CLUSTER_NAME=saisandeep-devops.xyz
+export EDITOR='/usr/bin/nano'
+#export K8S_VERSION=1.6.4
+
+# after copying the above files to .bashrc run "source .bashrc"
+
+# create a cluster using KOPS and generate a cluster file and save it carefully and do necessary changes
+
+kops create cluster --name=saisandeep-devops.xyz \
+--state=s3://saisandeep-devops.xyz --zone=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --control-plane-count=1 --node-size=t3.medium --control-plane-size=t3.medium \
+--control-plane-zones=us-east-1a --control-plane-volume-size 10 --node-volume-size 10 \
+--sh-public-key ~/.ssh/id_ed25519.pub \
+--dns-zone=saisandeep-devops.xyz --dry-run --output yaml
+
+#once done , run below commands to create the cluster
+
+kops create -f cluster.yml
+kops update cluster --name saisandeep-devops.xyz --yes --admin
+kops validate cluster --wait 10m
+kops delete -f cluster.yml --yes
