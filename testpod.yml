@@ -1,0 +1,36 @@
+#ways to create a pod
+
+#imperative way to create a pod "ku run testpod1 --image nginx:latest --dry-run -o yaml"
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: testpod1
+  name: testpod1
+spec:
+  containers:
+  - image: nginx:latest
+    name: testpod1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+#declarative way to create a pod " kubectl run testpod1 --image nginx:latest"
+
+#another way create testpod.yml and run using command "ku apply -f testpod.yml"
+
+#another way copy the yaml file from testpod.yml and use below format
+# echo '
+# >'apiVersion: v1
+# kind: Pod
+# metadata:
+#   labels:
+#     run: testpod
+#   name: testpod
+# spec:
+#   containers:
+#   - image: nginx:latest
+#     name: testpod'|ku apply -f -
